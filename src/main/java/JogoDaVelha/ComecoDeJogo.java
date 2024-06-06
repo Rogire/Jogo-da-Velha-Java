@@ -8,6 +8,7 @@ public class ComecoDeJogo extends Jogador
 {
     private static final Jogador player1 = new Jogador();
     private static final Jogador player2 = new Jogador();
+    private static final int[] IJ = {0,0}; //auxiliar para as posições lineariazadas dos bots
     private static int md;
     private static int winP1 = 0;
     private static int winP2 = 0;
@@ -17,7 +18,7 @@ public class ComecoDeJogo extends Jogador
     private static int P2FaltaUm;
     
     static Scanner teclado = new Scanner(System.in);
-    public static String boasVindas()
+    private static String boasVindas()
     {
         return """
                ==============================================
@@ -30,20 +31,20 @@ public class ComecoDeJogo extends Jogador
                """;
     }
     
-    public static int SelModo() //TODO: FAZER MODO INFINITO
+    private static int SelModo() //TODO: FAZER MODO INFINITO
     {
         int modo;
         modo = teclado.nextInt();
         
         while(modo != 1 && modo != 2)
         {
-            System.out.println("Selecione uma opção válida");
+            System.out.println("Selecione uma opcao valida");
             modo = teclado.nextInt();
         }
         return modo;
     }
     
-    public static void SetPlayers()
+    private static void SetPlayers()
     {
         System.out.println("Selecione qual jogador deseja ser:(X ou O)");
         boolean v=false, inseriu=false;
@@ -71,10 +72,10 @@ public class ComecoDeJogo extends Jogador
         }
             
     }
-    public static void SelBot()
+    private static void SelBot()
     {
         int dif=0;
-        System.out.println("Selecione a dificuldade:\n(1)Fácil\n(2)Médio\n(3)Difícil");
+        System.out.println("Selecione a dificuldade:\n(1)Facil\n(2)Medio\n(3)Dificil");
         dif = teclado.nextInt();
         if(dif == 1)
             VsBotEasy();
@@ -84,7 +85,7 @@ public class ComecoDeJogo extends Jogador
             VsBotHard();
     }
     
-    public static void VsBotEasy() //o bot recebe m e n gerados aleatoriamente entre 0 e 2
+    private static void VsBotEasy() //o bot recebe m e n gerados aleatoriamente entre 0 e 2
     {
         int m , n, max =2, min = 0;
         
@@ -121,7 +122,7 @@ public class ComecoDeJogo extends Jogador
         vencedor();
     }
     
-    public static void VsBotMed()
+    private static void VsBotMed()
     {
         int lin , col, max =2, min = 0;
         int MIc = -1 ,NIc=-1;//contador para iterar a posição inicial da coluna e linha
@@ -232,9 +233,10 @@ public class ComecoDeJogo extends Jogador
         vencedor();
     } 
     
-    public static void VsBotHard()
+    private static void VsBotHard()
     {
-        int lin , col, max =2, min = 0, aux=0;
+        int [] Quinas = {0,2,6,8};
+        int lin , col, max =2, min = 0, aux=0, mx=3,mn=0;
         int MIc = -1 ,NIc=-1;//contador para iterar a posição inicial da coluna e linha
         int MI=-1, NI=-1;    // posições iniciais geradas aleatoriamente de m e n
         boolean ehValido = true;
@@ -285,28 +287,8 @@ public class ComecoDeJogo extends Jogador
                 }
                 else
                 {
-                    int [] Quinas = {0,2,6,8};
-                    int mx = 3; 
-                    int mn = 0;
-                    boolean add = false;
                     
                     aux = (int)Math.floor(Math.random() * (mx - mn + 1) + mn); //Pega uma das quinas do tabuleiro
-                    
-                    for(int m=0; m<3;m++)
-                    {   //deslineariza a posição
-                        lin= m;
-                        for(int n=0;n<3;n++)
-                            {
-                                col=n;
-                                if(m*col+n == aux)
-                                    {
-                                        add =true;
-                                        break;
-                                     }      
-                            }
-                            if(add) break;
-                        } 
-                    
                     MI = MIc = lin;
                     NI = NIc = col;
 
@@ -391,26 +373,22 @@ public class ComecoDeJogo extends Jogador
                         
                         player2.fazerJogadaLinBot(P2FaltaUm);//ganha
                     }    
-                    else if(evitaQuina() == -1)                                     //O jogador não fez uma quina
+                    else if(!FezQuina())                                     //O jogador não fez uma quina
                     {
                         player2.fazerJogadaBot(lin, col);  
                     }
                     else                                                            //O jogador fez uma quina
                     {
-                        if(LinhaColunaLimpa(MIc,NIc) == 2 || LinhaColunaLimpa(MIc,NIc) == 4)
+                        aux = (int)Math.floor(Math.random() * (mx - mn + 1) + mn); //Pega uma das quinas do tabuleiro
+                        deslineariza(Quinas[aux]);
+                        
+                        while(vef(IJ[0],IJ[1]) == -1)
                         {
-                            int au = (MIc == 2)?(--MIc):(++MIc);
-                            player2.fazerJogadaBot(au,NIc);
+                            aux = (int)Math.floor(Math.random() * (mx - mn + 1) + mn);
+                            deslineariza(Quinas[aux]);
                         }
-                        else if(LinhaColunaLimpa(MIc,NIc) == 3)
-                        {
-                            int au = (NIc == 2)?(--NIc):(++NIc);
-                            player2.fazerJogadaBot(MIc,au);
-                        }
-                        else if(LinhaColunaLimpa(MIc,NIc) == -1)
-                        {
-                            player2.fazerJogadaLinBot(evitaQuina());
-                        }
+                        
+                        player2.fazerJogadaLinBot(Quinas[aux]);
                     }
                 }
                 else
@@ -466,26 +444,23 @@ public class ComecoDeJogo extends Jogador
                         }
                         player2.fazerJogadaLinBot(P2FaltaUm);//ganha
                     }    
-                    else if(evitaQuina() == -1)                                     //O jogador não fez uma quina
+                    else if(!FezQuina())                                     //O jogador não fez uma quina
                     {
                         player2.fazerJogadaBot(lin, col);  
                     }
                     else                                                            //O jogador fez uma quina
                     {
-                        if(LinhaColunaLimpa(MIc,NIc) == 2 || LinhaColunaLimpa(MIc,NIc) == 4)
+                        aux = (int)Math.floor(Math.random() * (mx - mn + 1) + mn); //Pega uma das quinas do tabuleiro
+                        deslineariza(Quinas[aux]);
+                        
+                        while(vef(IJ[0],IJ[1]) == -1)
                         {
-                            int au = (MIc == 2)?(--MIc):(++MIc);
-                            player2.fazerJogadaBot(au,NIc);
+                            aux = (int)Math.floor(Math.random() * (mx - mn + 1) + mn);
+                            deslineariza(Quinas[aux]);
                         }
-                        else if(LinhaColunaLimpa(MIc,NIc) == 3)
-                        {
-                            int au = (NIc == 2)?(--NIc):(++NIc);
-                            player2.fazerJogadaBot(MIc,au);
-                        }
-                        else if(LinhaColunaLimpa(MIc,NIc) == -1)
-                        {
-                            player2.fazerJogadaLinBot(evitaQuina());
-                        }
+                        
+                        player2.fazerJogadaLinBot(Quinas[aux]);
+                        
                     }
                 }
                 
@@ -493,7 +468,7 @@ public class ComecoDeJogo extends Jogador
         }
         vencedor();
     }
-    public static void VsPlayer()
+    private static void VsPlayer()
     {
         int m , n;
         while(!VefWinner())
@@ -507,7 +482,6 @@ public class ComecoDeJogo extends Jogador
             m = teclado.nextInt();
             n = teclado.nextInt();
             player1.fazerJogada(m, n);
-            System.out.println("deb"+Tabuleiro.nj);
             
             if(VefWinner())
                 break;
@@ -534,7 +508,7 @@ public class ComecoDeJogo extends Jogador
         vencedor();
     }
     
-    public static int faltaUm(char xb) //verifica se falta um pra fechar uma linha/ coluna/ diagonal
+    private static int faltaUm(char xb) //verifica se falta um pra fechar uma linha/ coluna/ diagonal
     {
         for(int i=0; i<tabuleiro.length; i++)
         {
@@ -578,9 +552,8 @@ public class ComecoDeJogo extends Jogador
         return -1;
     }
     
-    public static int evitaQuina()
-    {//verifica se o jogador marcou duas casas em sequencia i+1,j+1, ou i+1,j-1 e se sim marca essa casa pois caso
-     //o jogador marque ela ele ganhou o jogo
+    private static boolean FezQuina()
+    {//verifica se o jogador marcou duas casas em sequencia (i,j; i+1,j+1), ou  (i,j; i+1,j-1) e se sim 
         for(int i=0; i<3;i++)
         {
             for(int j=0;j<3;j++)
@@ -588,20 +561,19 @@ public class ComecoDeJogo extends Jogador
                 if(j<=1 && i<=1)
                     if(tabuleiro[i*col+(j+1)].getVal() != player2.getXB())//verifica se a casa i,j+1 já está marcada pelo bot
                         if(tabuleiro[(i*col+j)].getVal() == player1.getXB() && tabuleiro[((i+1)*col+(j+1))].getVal() == player1.getXB())
-                            return i*col+(j+1);
+                            return true;
     
                 if(j>0 && i<=1)
                     if(tabuleiro[i*col+(j-1)].getVal() != player2.getXB())//verifica se a casa i,j-1 já está marcada pelo bot
                         if(tabuleiro[(i*col+j)].getVal() == player1.getXB() && tabuleiro[((i+1)*col+(j-1))].getVal() == player1.getXB())
-                            return i*col+(j-1);
+                            return true;
             }
         }
-        return -1;
+        return false;
     }
     
-    public static void vencedor()
+    private static void vencedor()
     {
-        System.out.println("Entrou aqui");
         if(jogandoAgora == player1.getXB())
         {
             nj = 0;
@@ -624,68 +596,33 @@ public class ComecoDeJogo extends Jogador
         }
     }
     
-     protected static int LinhaColunaLimpa(int i, int j)
+    private static void deslineariza(int aux)
     {
-        boolean LinhaBloqueada = false;
-        boolean ColunaBloqueada = false;
-        if(i >= 0 && j>= 0)
-        {
-            i--;
-            j--;
-        }
+        int lin=0,col=0;
+        boolean add = false;
+        for(int m=0; m<3;m++)
+        {   //deslineariza a posição
+            lin= m;
+            for(int n=0;n<3;n++)
+            {
+                col=n;
+                if(m*col+n == aux)
+                {
+                    add =true;
+                    break;
+                }      
+            }
+            if(add) break;
+        } 
         
-        if(j==2)
-            for(int n = j; j>=0; j--)
-                if(tabuleiro[i*col+j].getVal() == player1.getXB())
-                    LinhaBloqueada = true;   
-        
-        if(j==0)
-            for(int n = j; j<3; j++)
-                if(tabuleiro[i*col+j].getVal() == player1.getXB())
-                    LinhaBloqueada = true;
-        
-        if(j==1)
-        {
-            if(tabuleiro[i*col+(j+1)].getVal() == player1.getXB())
-                LinhaBloqueada = true;
-            
-            if(tabuleiro[i*col+(j-1)].getVal() == player1.getXB())
-                LinhaBloqueada = true;
-        }
-                
-        if(i==2)
-            for(int m = i; m>=0; m--)
-                if(tabuleiro[m*col+j].getVal() == player1.getXB())
-                    ColunaBloqueada = true;   
-        
-        if(i==0)
-            for(int m = i; m<3; m++)
-                if(tabuleiro[m*col+j].getVal() == player1.getXB())
-                    ColunaBloqueada = true;
-        
-        if(i==1)
-        {
-            if(tabuleiro[(i)*col+j].getVal() == player1.getXB())
-                ColunaBloqueada = true;
-            
-            if(tabuleiro[(i)*col+j].getVal() == player1.getXB())
-                ColunaBloqueada = true;
-        }
-        
-        if(LinhaBloqueada && !ColunaBloqueada)
-            return 2;
-        else if(!LinhaBloqueada && ColunaBloqueada)
-            return 3;
-        else if(!LinhaBloqueada && !ColunaBloqueada)
-            return 4;
-        else 
-            return -1;
+        IJ[0] = lin;
+        IJ[1] = col;
     }
     
-    public static void jogarNovamente()
+    private static void jogarNovamente()
     {
         int escolha;
-        System.out.println("Deseja jogar novamente? (1)sim\n(2)não");
+        System.out.println("Deseja jogar novamente? \n(1)sim\n(2)nao");
         escolha = teclado.nextInt();
         if(escolha == 1)
         {
@@ -717,10 +654,10 @@ public class ComecoDeJogo extends Jogador
     public static void Estatisticas()
     {
        System.out.println("==============================================\n" +
-"       ===  Estatísticas de Jogo   ===\n" + "==============================================");
+"       ===  Estatisticas de Jogo   ===\n" + "==============================================");
        System.out.println("Total de jogos: "+Tabuleiro.numJogos);
-       System.out.println("Vitórias do Player1: "+winP1);
-       System.out.println("Vitórias do Player2: "+winP2);
+       System.out.println("Vitorias do Player1: "+winP1);
+       System.out.println("Vitorias do Player2: "+winP2);
        System.out.println("O jogo deu velha "+velha+" vezes");
        imprimeTUDO();
        System.out.println("==============================================");

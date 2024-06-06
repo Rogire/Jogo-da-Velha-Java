@@ -12,8 +12,10 @@ public class Jogador extends Tabuleiro
     protected static final Jogador player1 = new Jogador();
     protected static final Jogador player2 = new Jogador();
     
-    private char XB = 'd'; 
+    static List<String> jogadas = new ArrayList<>();
     static List<String> jogadasNoJogo = new ArrayList();
+    
+    private char XB = 'd'; 
     private static int iAt=0;
     
     public char getXB() {
@@ -23,8 +25,6 @@ public class Jogador extends Tabuleiro
     public void setXB(char xb) {
         XB = xb;
     }
-
-
     
     public void fazerJogada(int i, int j)
     {
@@ -39,7 +39,6 @@ public class Jogador extends Tabuleiro
 
                 jogadasNoJogo.add("("+i+","+j+")");
                 nj++;
-                System.out.println(nj);
                 fezJogada = true;
                 Tabuleiro.imprime();
             }
@@ -47,16 +46,16 @@ public class Jogador extends Tabuleiro
             {
                 while(pos == -1)
                 {
-                    System.out.println("Posição inválida, a casa já tem valor armazenado");
-                    System.out.println("Insira uma posição válida");
+                    System.out.println("Posicao invalida, a casa já tem valor armazenado");
+                    System.out.println("Insira uma posição valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
                     pos = vef(i,j);
                 }
                 while(pos == -2)
                 {
-                    System.out.println("Posição fora do tabuleiro");
-                    System.out.println("Insira uma posição válida");
+                    System.out.println("Posicao fora do tabuleiro");
+                    System.out.println("Insira uma posição valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
                     pos = vef(i,j);
@@ -126,13 +125,11 @@ public class Jogador extends Tabuleiro
     
     public static void imprimeJogadas()
     {
-        
         System.out.println("Jogadas realizadas:");
         for(String str : jogadasNoJogo)
         {
             System.out.println(str);
         }
-        
         for(int i=iAt; i<numJogos;i++) //roda uma vez (numJogos-iAt=1)
         {
             jogadas.add("---Jogo "+(i+1)+"---");
@@ -140,10 +137,7 @@ public class Jogador extends Tabuleiro
                 jogadas.add(str);
             
         }
-        
-        for(int i=0; i<jogadasNoJogo.size();i++)
-            jogadasNoJogo.remove(i);
-        
+        jogadasNoJogo.clear();
         iAt++;  
     }
      public static void imprimeTUDO()

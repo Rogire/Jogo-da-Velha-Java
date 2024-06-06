@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Tabuleiro extends CasaTab
 {
     protected static CasaTab[] tabuleiro = new CasaTab[9]; // vetor linearizado das casas no tabuleiro
-    protected static List<String> jogadas = new ArrayList<>();
     protected static final int col = 3;
     protected static final int lin = 3;
     protected static int nj = 0;

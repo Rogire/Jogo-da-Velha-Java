@@ -10,7 +10,7 @@ public class JogoDaVelha {
     {
         Scanner teclado = new Scanner(System.in);
         int sel;
-        System.out.println("Selecione oque deseja fazer:\n(1)Jogar jogo da velha\n(2)Estatísticas\n(0)Sair");
+        System.out.println("Selecione oque deseja fazer:\n(1)Jogar jogo da velha\n(2)Estatisticas\n(0)Sair");
         sel = teclado.nextInt();
         while(sel != 0)
         {
@@ -19,7 +19,7 @@ public class JogoDaVelha {
             else
                 ComecoDeJogo.Estatisticas();
             
-            System.out.println("Selecione oque deseja fazer:\n(1)Jogar jogo da velha\n(2)Estatísticas\n(0)Sair");
+            System.out.println("Selecione oque deseja fazer:\n(1)Jogar jogo da velha\n(2)Estatisticas\n(0)Sair");
             sel = teclado.nextInt();
         }
     }
