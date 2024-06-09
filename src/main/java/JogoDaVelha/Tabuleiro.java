@@ -1,10 +1,5 @@
 package JogoDaVelha;
-import java.util.List;
-import java.util.ArrayList;
-/**
- *
- * @author igort
- */
+
 public class Tabuleiro extends CasaTab
 {
     protected static CasaTab[] tabuleiro = new CasaTab[9]; // vetor linearizado das casas no tabuleiro
@@ -14,7 +9,7 @@ public class Tabuleiro extends CasaTab
     protected static int numJogos=0;
     
     
-    static void iniciaVet()
+    protected static void iniciaVet()
     {
         for(int i=0; i<tabuleiro.length; i++)
             tabuleiro[i] = new CasaTab();
@@ -37,7 +32,21 @@ public class Tabuleiro extends CasaTab
             return -2; // fora do tabuleiro
     }
     
-    public static boolean VefWinner() //verifica se há vencedor em qualquer uma das linhas e colunas em O(1)
+    protected static int vefLin(int pos)
+    {
+        System.out.println(pos);
+        
+        if(pos >=0 && pos <=8)
+        {
+            if(tabuleiro[pos].getVal() == ' ')
+                return pos;
+            else 
+                return -1;
+        }
+        else 
+            return -2;
+    }
+    protected static boolean VefWinner() //verifica se há vencedor em qualquer uma das linhas e colunas em O(1)
     {
 
         if((tabuleiro[0].getVal() == tabuleiro[1].getVal()) && (tabuleiro[0].getVal() ==  tabuleiro[2].getVal()) && tabuleiro[0].getVal() != ' ')
@@ -64,7 +73,7 @@ public class Tabuleiro extends CasaTab
         return false;
     }
     
-    protected static void imprime() 
+    protected void imprime() 
     {   
         String meio = "-----------";
         String l1 = tabuleiro[0].getVal() + " | " + tabuleiro[1].getVal() + " | " + tabuleiro[2].getVal();

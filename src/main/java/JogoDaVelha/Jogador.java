@@ -8,25 +8,25 @@ import java.util.ArrayList;
  */
 public class Jogador extends Tabuleiro
 {
-    static Scanner teclado = new Scanner(System.in);
+    protected static final Scanner teclado = new Scanner(System.in);
     protected static final Jogador player1 = new Jogador();
     protected static final Jogador player2 = new Jogador();
     
-    static List<String> jogadas = new ArrayList<>();
-    static List<String> jogadasNoJogo = new ArrayList();
+    private static List<String> jogadas = new ArrayList<>();
+    private static List<String> jogadasNoJogo = new ArrayList();
     
     private char XB = 'd'; 
     private static int iAt=0;
     
-    public char getXB() {
+    protected char getXB() {
         return XB;
     }
 
-    public void setXB(char xb) {
+    protected void setXB(char xb) {
         XB = xb;
     }
     
-    public void fazerJogada(int i, int j)
+    protected void fazerJogada(int i, int j)
     {
         int pos = vef(i,j);
         boolean fezJogada = false;
@@ -40,14 +40,14 @@ public class Jogador extends Tabuleiro
                 jogadasNoJogo.add("("+i+","+j+")");
                 nj++;
                 fezJogada = true;
-                Tabuleiro.imprime();
+                imprime();
             }
             else
             {
                 while(pos == -1)
                 {
-                    System.out.println("Posicao invalida, a casa já tem valor armazenado");
-                    System.out.println("Insira uma posição valida");
+                    System.out.println("Posicao invalida, a casa ja tem valor armazenado");
+                    System.out.println("Insira uma posicao valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
                     pos = vef(i,j);
@@ -55,7 +55,7 @@ public class Jogador extends Tabuleiro
                 while(pos == -2)
                 {
                     System.out.println("Posicao fora do tabuleiro");
-                    System.out.println("Insira uma posição valida");
+                    System.out.println("Insira uma posicao valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
                     pos = vef(i,j);
@@ -64,7 +64,7 @@ public class Jogador extends Tabuleiro
         }  
     }
     
-    public void fazerJogadaBot(int i, int j) //não imprime as mensagens de erro
+    protected void fazerJogadaBot(int i, int j) //não imprime as mensagens de erro
     {
         int pos = vef(i,j);
         boolean fezJogada = false;
@@ -78,7 +78,7 @@ public class Jogador extends Tabuleiro
                 jogadasNoJogo.add("("+i+","+j+")");
                 nj++;
                 fezJogada = true;
-                Tabuleiro.imprime();
+                imprime();
             }
             else
             {
@@ -91,7 +91,7 @@ public class Jogador extends Tabuleiro
             }
         }  
     }
-    public void fazerJogadaLinBot(int pos) //não imprime as mensagens de erro
+    protected void fazerJogadaLinBot(int pos) //não imprime as mensagens de erro
     {
         int i=0, j=0, P;
         boolean add=false;
@@ -119,11 +119,11 @@ public class Jogador extends Tabuleiro
         {
             nj++;
             tabuleiro[pos].setVal(XB);
-            Tabuleiro.imprime();
+            imprime();
         }    
     }
     
-    public static void imprimeJogadas()
+    protected static void imprimeJogadas(int vencedor)
     {
         System.out.println("Jogadas realizadas:");
         for(String str : jogadasNoJogo)
@@ -133,14 +133,21 @@ public class Jogador extends Tabuleiro
         for(int i=iAt; i<numJogos;i++) //roda uma vez (numJogos-iAt=1)
         {
             jogadas.add("---Jogo "+(i+1)+"---");
-            for(String str : jogadasNoJogo)
+            if(vencedor != 0 && vencedor != 3)
+                jogadas.add("---Vencedor: Player"+(vencedor)+"---");
+            else if(vencedor == 3)
+                jogadas.add("---Vencedor: Bot---");
+            else
+                jogadas.add("---O jogo deu velha---");
+            
+            for(String str : jogadasNoJogo)//adiciona as jogadas da partida atual na array das jogadas totais
                 jogadas.add(str);
             
         }
-        jogadasNoJogo.clear();
+        jogadasNoJogo.clear(); // limpa o vetor das jogadas atuais
         iAt++;  
     }
-     public static void imprimeTUDO()
+    protected static void imprimeTUDO()
     {
         System.out.println("Jogadas realizadas em todos os jogos:");
         for(String str : jogadas)
