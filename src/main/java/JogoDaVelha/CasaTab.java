@@ -1,6 +1,6 @@
 package JogoDaVelha;
 
- public class CasaTab // cada casa do tabuleiro
+ public final class CasaTab // cada casa do tabuleiro
 {
     protected char val = ' '; // define o valor X ou O
     

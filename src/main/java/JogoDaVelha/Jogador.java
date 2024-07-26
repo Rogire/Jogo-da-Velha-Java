@@ -2,15 +2,13 @@ package JogoDaVelha;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-/**
- *
- * @author igort
- */
-public class Jogador extends Tabuleiro
+
+public class Jogador
 {
-    protected static final Scanner teclado = new Scanner(System.in);
-    protected static final Jogador player1 = new Jogador();
-    protected static final Jogador player2 = new Jogador();
+    private static final Scanner teclado = new Scanner(System.in);
+    private static final Jogador player1 = new Jogador();
+    private static final Jogador player2 = new Jogador();
+    private static int col = 3;
     
     private static List<String> jogadas = new ArrayList<>();
     private static List<String> jogadasNoJogo = new ArrayList();
@@ -26,21 +24,21 @@ public class Jogador extends Tabuleiro
         XB = xb;
     }
     
-    protected void fazerJogada(int i, int j)
+    protected void fazerJogada(int i, int j,String jogada)
     {
-        int pos = vef(i,j);
+        int pos = Tabuleiro.vef(i,j);
         boolean fezJogada = false;
         
         while(!fezJogada)
         {
             if(pos >= 0 )
             {   
-                tabuleiro[pos].setVal(XB);
+                Tabuleiro.tabuleiro[pos].setVal(XB);
 
-                jogadasNoJogo.add("("+i+","+j+")");
-                nj++;
+                jogadasNoJogo.add(jogada);
+                Tabuleiro.setNj(Tabuleiro.getNj()+1);
                 fezJogada = true;
-                imprime();
+                Tabuleiro.imprime();
             }
             else
             {
@@ -50,7 +48,7 @@ public class Jogador extends Tabuleiro
                     System.out.println("Insira uma posicao valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
-                    pos = vef(i,j);
+                    pos = Tabuleiro.vef(i,j);
                 }
                 while(pos == -2)
                 {
@@ -58,7 +56,7 @@ public class Jogador extends Tabuleiro
                     System.out.println("Insira uma posicao valida");
                     i = teclado.nextInt();
                     j=teclado.nextInt();
-                    pos = vef(i,j);
+                    pos = Tabuleiro.vef(i,j);
                 }
             }
         }  
@@ -66,19 +64,19 @@ public class Jogador extends Tabuleiro
     
     protected void fazerJogadaBot(int i, int j) //não imprime as mensagens de erro
     {
-        int pos = vef(i,j);
+        int pos = Tabuleiro.vef(i,j);
         boolean fezJogada = false;
         
         while(!fezJogada)
         {
             if(pos >= 0)
             {   
-                tabuleiro[pos].setVal(XB);
+                Tabuleiro.tabuleiro[pos].setVal(XB);
 
                 jogadasNoJogo.add("("+i+","+j+")");
-                nj++;
+                Tabuleiro.setNj(Tabuleiro.getNj()+1);
                 fezJogada = true;
-                imprime();
+                Tabuleiro.imprime();
             }
             else
             {
@@ -86,7 +84,7 @@ public class Jogador extends Tabuleiro
                 {
                     i = (int)Math.floor(Math.random() * (2 - 0 + 1) + 0);
                     j = (int)Math.floor(Math.random() * (2 - 0 + 1) + 0);
-                    pos = vef(i,j);
+                    pos = Tabuleiro.vef(i,j);
                 }
             }
         }  
@@ -95,8 +93,6 @@ public class Jogador extends Tabuleiro
     {
         int i=0, j=0, P;
         boolean add=false;
-        
-        
         
         for(int m=0; m<3;m++)
         {
@@ -114,12 +110,12 @@ public class Jogador extends Tabuleiro
             if(add) break;
         }
         
-        P = vef(i,j);
+        P = Tabuleiro.vef(i,j);
         if(P>=0)
         {
-            nj++;
-            tabuleiro[pos].setVal(XB);
-            imprime();
+            Tabuleiro.setNj(Tabuleiro.getNj()+1);
+            Tabuleiro.tabuleiro[pos].setVal(XB);
+            Tabuleiro.imprime();
         }    
     }
     
@@ -130,7 +126,7 @@ public class Jogador extends Tabuleiro
         {
             System.out.println(str);
         }
-        for(int i=iAt; i<numJogos;i++) //roda uma vez (numJogos-iAt=1)
+        for(int i=iAt; i<Tabuleiro.getNumJogos();i++) //roda uma vez (numJogos-iAt=1)
         {
             jogadas.add("---Jogo "+(i+1)+"---");
             if(vencedor != 0 && vencedor != 3)
@@ -151,8 +147,6 @@ public class Jogador extends Tabuleiro
     {
         System.out.println("Jogadas realizadas em todos os jogos:");
         for(String str : jogadas)
-        {
             System.out.println(str);
-        }
     }
 }

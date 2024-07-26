@@ -8,7 +8,6 @@ public class JogoDaVelha {
     
     public static void main(String[] args) 
     {
-        ComecoDeJogo jogo = new ComecoDeJogo();
         Scanner teclado = new Scanner(System.in);
         
         int sel = 0;
@@ -25,9 +24,9 @@ public class JogoDaVelha {
         while(sel != 0)
         {
             if(sel == 1)
-                jogo.inicio();
+                ComecoDeJogo.inicio();
             else
-                jogo.Estatisticas();
+                ComecoDeJogo.Estatisticas();
             
             System.out.println("Selecione oque deseja fazer:\n(1)Jogar jogo da velha\n(2)Estatisticas\n(0)Sair");
             try

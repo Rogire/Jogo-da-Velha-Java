@@ -1,13 +1,28 @@
 package JogoDaVelha;
 
-public class Tabuleiro extends CasaTab
+public abstract class Tabuleiro 
 {
     protected static CasaTab[] tabuleiro = new CasaTab[9]; // vetor linearizado das casas no tabuleiro
     protected static final int col = 3;
     protected static final int lin = 3;
-    protected static int nj = 0;
-    protected static int numJogos=0;
+    private static int nj = 0;
+    private static int numJogos=0;
     
+    public static int getNumJogos() {
+        return numJogos;
+    }
+
+    public static void setNumJogos(int numJogos) {
+        Tabuleiro.numJogos = numJogos;
+    }
+
+    public static int getNj() {
+        return nj;
+    }
+
+    public static void setNj(int nj) {
+        Tabuleiro.nj = nj;
+    }
     
     protected static void iniciaVet()
     {
@@ -34,8 +49,6 @@ public class Tabuleiro extends CasaTab
     
     protected static int vefLin(int pos)
     {
-        System.out.println(pos);
-        
         if(pos >=0 && pos <=8)
         {
             if(tabuleiro[pos].getVal() == ' ')
@@ -48,7 +61,6 @@ public class Tabuleiro extends CasaTab
     }
     protected static boolean VefWinner() //verifica se há vencedor em qualquer uma das linhas e colunas em O(1)
     {
-
         if((tabuleiro[0].getVal() == tabuleiro[1].getVal()) && (tabuleiro[0].getVal() ==  tabuleiro[2].getVal()) && tabuleiro[0].getVal() != ' ')
             return true;
         if((tabuleiro[3].getVal() == tabuleiro[4].getVal()) && (tabuleiro[3].getVal() ==  tabuleiro[5].getVal()) && tabuleiro[3].getVal() != ' ')
@@ -68,12 +80,10 @@ public class Tabuleiro extends CasaTab
         if((tabuleiro[2].getVal() == tabuleiro[4].getVal()) && (tabuleiro[2].getVal() ==  tabuleiro[6].getVal()) && tabuleiro[2].getVal() != ' ')
             return true;
         
-        
-        
         return false;
     }
     
-    protected void imprime() 
+    protected static void imprime() 
     {   
         String meio = "-----------";
         String l1 = tabuleiro[0].getVal() + " | " + tabuleiro[1].getVal() + " | " + tabuleiro[2].getVal();
@@ -85,8 +95,6 @@ public class Tabuleiro extends CasaTab
     protected static void limpa()
     {
         for(CasaTab str : tabuleiro)
-        {
             str.setVal(' ');
-        }
     }
 }
